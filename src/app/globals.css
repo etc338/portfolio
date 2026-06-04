@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+
+    :root {
+      --primary: #0ea5e9;
+      --secondary: #8b5cf6;
+    }
+    body {
+      background-color: #030712 !important;
+      color: #f8fafc !important;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+    h1, h2, h3, h4, h5, h6, .font-heading {
+      font-family: 'Outfit', sans-serif !important;
+    }
+    .glass-panel {
+      background: rgba(10, 15, 30, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .text-gradient {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Fixed Scroll Reveal Animations */
+    .reveal-element { 
+      opacity: 0; 
+      transform: translateY(40px); 
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+      will-change: transform, opacity;
+    }
+    .reveal-element.is-visible { 
+      opacity: 1 !important; 
+      transform: translateY(0) !important; 
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    
+    @media (pointer: fine) {
+      body, a, button, input, textarea, select { cursor: none !important; }
+    }
+  
