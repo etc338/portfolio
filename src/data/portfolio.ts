@@ -5,14 +5,14 @@ export const portfolioData = {
     bio: "Full Stack Developer with over a year of hands-on experience building scalable web applications using the MERN stack and Next.js. Proven track record of managing end-to-end B2B client projects, executing live database migrations, and integrating intelligent features like RAG and LLMs to build next-generation applications.",
     email: "aksheshpatel2019@gmail.com",
     phone: "+91 9408026510",
-    linkedin: "https://linkedin.com/in/aksheshpatel",
-    github: "https://github.com/akshesh2019",
+    linkedin: "https://www.linkedin.com/in/akshesh-patel-b49888192/",
+    github: "https://github.com/Patelakshesh",
     leetcode: "#"
   },
   skills: [
     "JavaScript", "SQL", "ReactJS", "NextJS", "Redux", "Zustand", 
     "Tailwind CSS", "Node.js", "Express.js", "MongoDB", 
-    "Gemini API", "RAG", "Git"
+    "Gemini API", "RAG", ".NET", "Git"
   ],
   experience: [
     {
@@ -58,33 +58,35 @@ export const portfolioData = {
   projects: [
     {
       title: "QuickBite - Food Delivery",
-      date: "OCT 2025",
+      date: "MAY 2026",
       desc: "Full-stack food delivery platform implementing geolocation, live tracking with Socket.io, secure RBAC, and Gemini LLM API with RAG via MongoDB Vector Search for intelligent recommendations.",
       tags: ["ReactJS", "NodeJS", "MongoDB", "Socket.io", "Gemini API"],
-      link: "#"
+      link: "https://vingo-silk.vercel.app/",
+      image: "/vingo_delivery.png"
     },
     {
-      title: "JobConnectPro",
-      date: "MAR 2024",
-      desc: "Comprehensive job portal connecting recruiters and candidates. Implemented secure RBAC and integrated Cloudinary API for optimized document and resume uploads.",
-      tags: ["ReactJS", "NodeJS", "ExpressJS", "MongoDB"],
-      link: "#"
+      title: "SwiftChat - Real-time Chat Application",
+      date: "DEC 2025",
+      desc: "Full-featured real-time messaging application with private conversations, persistent group chat rooms, secure user authentication, and active online presence tracking.",
+      tags: ["ReactJS", "Socket.io", "NodeJS", "ExpressJS"],
+      link: "https://chat-app-six-pi-51.vercel.app/",
+      image: "/chat_app.png"
     }
   ],
   clientProjects: [
     {
-      title: "Enterprise B2B Platform",
-      date: "2025",
-      desc: "Large-scale B2B logistics and communication platform. Integrated real-time Socket.io APIs, geolocation mapping, and executed live database schema migrations to optimize query performance.",
-      tags: ["Next.js", "Redux Thunk", "Socket.io", "Ionic"],
-      link: "https://your-client-link.com" 
+      title: "HRL Projects - Construction Management System",
+      date: "2026",
+      desc: "Advanced construction management ecosystem with a dedicated Admin Dashboard and Supervisor mobile app. Features full tracking of income and expenses, attendance logs, PDF report downloads, and on-site supervisor tools for recording attendance and expenses.",
+      tags: ["ReactJS", ".NET", "Ionic", "PDF Reports"],
+      link: "https://hrlprojects.neelkanthcontrols.co.uk"
     },
     {
-      title: "Corporate HRM System",
+      title: "Neelkanth Controls",
       date: "2025",
-      desc: "Comprehensive Human Resource Management system handling employee data, attendance tracking, secure role-based access control (RBAC), and automated leave functionality.",
-      tags: ["ReactJS", "NodeJS", "ExpressJS", "MongoDB"],
-      link: "https://your-client-link.com" 
+      desc: "A professional construction-focused portal built with Bootstrap and .NET. Showcases Dubai-based sites and projects, integrated with automated email transmission systems.",
+      tags: ["Bootstrap", ".NET", "SMTP", "Responsive"],
+      link: "https://neelkanthcontrols.co.uk"
     }
   ],
   achievements: [

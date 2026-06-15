@@ -15,6 +15,24 @@ import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 export default function App() {
 
   const mainRef = useRef<HTMLDivElement>(null);
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+
+  const handleEmailClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Copy the email to clipboard
+    navigator.clipboard.writeText(portfolioData.profile.email).then(() => {
+      setToastMessage("Email copied! Opening Gmail...");
+      setTimeout(() => setToastMessage(null), 3500);
+    }).catch(() => {
+      setToastMessage("Opening Gmail...");
+      setTimeout(() => setToastMessage(null), 3500);
+    });
+
+    // Open Gmail compose screen in a new tab
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${portfolioData.profile.email}`;
+    window.open(gmailUrl, '_blank');
+  };
 
   useEffect(() => {
     const observerOptions = {
@@ -44,20 +62,59 @@ export default function App() {
     };
   }, []);
 
-  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       name: { value: string };
+      email: { value: string };
       subject: { value: string };
       message: { value: string };
       reset: () => void;
     };
     const name = target.name.value;
+    const email = target.email.value;
     const subject = target.subject.value;
     const message = target.message.value;
+
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "";
+
+    if (accessKey) {
+      setToastMessage("Sending message directly...");
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: name,
+            email: email,
+            subject: subject,
+            message: message
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setToastMessage("Message sent successfully!");
+          setTimeout(() => setToastMessage(null), 4000);
+          target.reset();
+          return;
+        }
+      } catch (err) {
+        console.error("Error sending via Web3Forms:", err);
+      }
+    }
+
+    // Fallback if access key is not set or API fails
+    setToastMessage("Opening Gmail with pre-filled message...");
+    setTimeout(() => setToastMessage(null), 3500);
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${portfolioData.profile.email}&su=${encodeURIComponent(subject + " - " + name)}&body=${encodeURIComponent(message + "\n\nFrom: " + name + " <" + email + ">")}`;
+    window.open(gmailUrl, '_blank');
     
-    const mailtoLink = `mailto:${portfolioData.profile.email}?subject=${encodeURIComponent(subject + " - " + name)}&body=${encodeURIComponent(message + "\n\nFrom: " + name)}`;
-    window.location.href = mailtoLink;
     target.reset();
   };
 
@@ -85,7 +142,7 @@ export default function App() {
             <a href="#projects" className="px-8 py-4 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-bold font-heading tracking-wide hover:shadow-[0_0_30px_rgba(14,165,233,0.4)] hover:-translate-y-1 transition-all duration-300">
               View My Work
             </a>
-            <a href="Akshesh_Resume.pdf" download="Akshesh_Resume.pdf" className="px-8 py-4 rounded-full border border-sky-500/50 text-sky-400 font-heading tracking-wide hover:bg-sky-500/10 hover:border-sky-400 transition-all duration-300 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center gap-2">
+            <a href="https://drive.google.com/file/d/1e_KaVxkGfIA8HicWH9PVhBnyNJqxof_8/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" className="px-8 py-4 rounded-full border border-sky-500/50 text-sky-400 font-heading tracking-wide hover:bg-sky-500/10 hover:border-sky-400 transition-all duration-300 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center gap-2">
               <span className="font-bold">Download Resume</span>
             </a>
             <a href="#contact" className="px-8 py-4 rounded-full border border-slate-700 text-slate-300 font-heading tracking-wide hover:border-slate-500 hover:text-white transition-all duration-300 bg-slate-900/50 backdrop-blur-sm">
@@ -182,16 +239,16 @@ export default function App() {
             
             <div>
               <h4 className="text-2xl font-heading font-bold text-white mb-8 flex items-center gap-3 reveal-element"><Briefcase size={24} className="text-sky-500" /> Work History</h4>
-              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-800 before:to-transparent">
+              <div className="relative border-l-2 border-slate-800/80 ml-4 space-y-8">
                 {portfolioData.experience.map((exp, idx) => (
-                  <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal-element">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full border border-slate-800 bg-slate-900 group-hover:border-sky-500 text-sky-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
+                  <div key={idx} className="relative pl-8 group reveal-element">
+                    <div className="absolute -left-5 top-4 flex items-center justify-center w-10 h-10 rounded-full border border-slate-800 bg-slate-950 group-hover:border-sky-500 text-sky-500 shadow z-10 transition-colors">
                       <Briefcase size={16} />
                     </div>
-                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-panel p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition-colors">
+                    <div className="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition-colors">
                       <div className="flex flex-col xl:flex-row xl:items-center justify-between mb-2 gap-2">
                         <h5 className="font-bold font-heading text-white text-lg">{exp.role}</h5>
-                        <span className="text-[10px] font-bold font-heading text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-full whitespace-nowrap tracking-wide">{exp.period}</span>
+                        <span className="text-[10px] font-bold font-heading text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-full whitespace-nowrap tracking-wide w-fit">{exp.period}</span>
                       </div>
                       <p className="text-sm font-semibold text-slate-400 mb-4">{exp.company}</p>
                       <ul className="text-xs text-slate-400 space-y-2 list-disc list-inside">
@@ -237,10 +294,26 @@ export default function App() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32 max-w-5xl mx-auto">
             {portfolioData.projects.map((proj, idx) => (
-              <div key={idx} className="group glass-panel rounded-2xl overflow-hidden reveal-element border border-slate-800 hover:border-sky-500/50 transition-all duration-300 hover:-translate-y-2 flex flex-col">
+              <a 
+                key={idx} 
+                href={proj.link}
+                target={proj.link !== "#" ? "_blank" : undefined}
+                rel={proj.link !== "#" ? "noopener noreferrer" : undefined}
+                className="group glass-panel rounded-2xl overflow-hidden reveal-element border border-slate-800 hover:border-sky-500/50 transition-all duration-300 hover:-translate-y-2 flex flex-col cursor-pointer"
+              >
                 <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center border-b border-slate-800">
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-900/20 to-indigo-900/20 z-0"></div>
-                  <Code size={48} className="text-slate-700 group-hover:text-sky-400/50 transition-colors z-10 group-hover:scale-110 duration-500" />
+                  {proj.image ? (
+                    <img 
+                      src={proj.image} 
+                      alt={proj.title} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-br from-sky-900/20 to-indigo-900/20 z-0"></div>
+                      <Code size={48} className="text-slate-700 group-hover:text-sky-400/50 transition-colors z-10 group-hover:scale-110 duration-500" />
+                    </>
+                  )}
                 </div>
                 <div className="p-6 flex-grow flex flex-col">
                   <div className="flex justify-between items-start mb-4">
@@ -256,7 +329,7 @@ export default function App() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
 
@@ -310,6 +383,10 @@ export default function App() {
               <input type="text" id="name" name="name" required className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors" placeholder="John Doe" />
             </div>
             <div className="mb-6">
+              <label htmlFor="email" className="block text-xs font-bold font-heading text-slate-400 uppercase mb-2">Your Email</label>
+              <input type="email" id="email" name="email" required className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors" placeholder="john@example.com" />
+            </div>
+            <div className="mb-6">
               <label htmlFor="subject" className="block text-xs font-bold font-heading text-slate-400 uppercase mb-2">Subject</label>
               <input type="text" id="subject" name="subject" required className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors" placeholder="Project Inquiry" />
             </div>
@@ -329,17 +406,29 @@ export default function App() {
             <a href={portfolioData.profile.linkedin} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-sky-400 hover:-translate-y-1 transition-all duration-300">
               <Linkedin size={28} />
             </a>
-            <a href={`mailto:${portfolioData.profile.email}`} className="text-slate-400 hover:text-indigo-400 hover:-translate-y-1 transition-all duration-300">
+            <a href="#" onClick={handleEmailClick} className="text-slate-400 hover:text-indigo-400 hover:-translate-y-1 transition-all duration-300">
               <Mail size={28} />
+            </a>
+          </div>
+          <div className="mt-6 reveal-element">
+            <a href="#" onClick={handleEmailClick} className="text-slate-400 hover:text-sky-400 font-semibold transition-colors duration-300">
+              {portfolioData.profile.email}
             </a>
           </div>
         </div>
       </section>
 
       <footer className="py-8 text-center text-slate-500 text-sm relative z-10 border-t border-slate-900 bg-[#030712]">
-        <p>Built with Next.js, Three.js & Tailwind CSS.</p>
-        <p className="mt-2 text-xs">© {new Date().getFullYear()} {portfolioData.profile.name}. All rights reserved.</p>
+        <p className="text-xs">© {new Date().getFullYear()} {portfolioData.profile.name}. All rights reserved.</p>
       </footer>
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-8 right-8 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-sky-500/40 text-white shadow-[0_0_30px_rgba(14,165,233,0.3)] transition-all duration-500 transform translate-y-0 opacity-100 font-heading">
+          <div className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" />
+          <span className="font-bold text-sm tracking-wide">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }
