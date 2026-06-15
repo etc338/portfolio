@@ -76,6 +76,9 @@ export const metadata: Metadata = {
     },
   },
   category: "technology",
+  verification: {
+    google: "7IUFSXsW-JniYCpIOg4zlNdtlMyafi7arRBJiw8G2-4",
+  },
 };
 
 // JSON-LD Structured Data — tells Google exactly who Akshesh Patel is
