@@ -12,7 +12,7 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://akshesh-portfolio.vercel.app";
+const siteUrl = "https://akshesh-patel.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
